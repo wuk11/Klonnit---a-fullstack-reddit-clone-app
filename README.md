@@ -73,7 +73,7 @@ Klonnit/
 │   ├── src/
 │   ├── Dockerfile
 │   └── package.json
-├── redditCloneAPP-main/             # Angular frontend
+├── redditCloneAPP-main/                  # Angular frontend
 │   ├── src/
 │   ├── Dockerfile
 │   └── package.json
