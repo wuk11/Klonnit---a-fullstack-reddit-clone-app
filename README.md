@@ -16,6 +16,7 @@ A full-stack Reddit clone built with [Angular, Node.js, Mysql].
 
 **Frontend:**
 - Angular
+- Bootstrap
 
 **Backend:**
 - Node.js
