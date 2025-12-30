@@ -1,0 +1,104 @@
+<div class="container mt-5">
+  <div class="container d-flex justify-content-between">
+    <h1 class="text-center" style="color: aquamarine">{{ communityName }}</h1>
+    <h2
+      *ngIf="hasPermissionToDelete"
+      style="cursor: pointer"
+      (click)="goToDeleteCommunity(communityId)"
+    >
+      > Delete community
+    </h2>
+    <h2
+      style="cursor: pointer; color: paleturquoise"
+      (click)="goToCreateArticle(communityId)"
+    >
+      > Post article
+    </h2>
+  </div>
+
+  <div class="card">
+    <div class="card-body d-flex align-items-center">
+      <div class="w-100">
+        Rules:
+        {{ community.rules }}
+      </div>
+      <div class="flex-shrink-1">
+        <form
+          [hidden]="isRulesFormHidden"
+          [formGroup]="editRulesForm"
+          (submit)="postEditRules()"
+          class="my-4"
+        >
+          <textarea
+            formControlName="rules"
+            class="form-control"
+            id="rules"
+          ></textarea>
+          <button type="submit" class="btn btn-primary my-2">submit</button>
+        </form>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          *ngIf="hasPermissionToEdit"
+          (click)="showRulesEditForm()"
+        >
+          Edit rules
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <br />
+  <select
+    (change)="selectSortButton($event)"
+    class="form-select"
+    aria-label="Default select example"
+    id="sort"
+  >
+    <option selected>Sort by:</option>
+    <option value="hot">Hot</option>
+    <option value="karma">Karma</option>
+    <option value="latest">Date latest</option>
+    <option value="oldest">Date oldest</option>
+  </select>
+
+  <div class="py-2" *ngFor="let article of data.articles">
+    <div class="card">
+      <a [routerLink]="'/community/' + communityId + '/article/' + article.id">
+        <h5 class="card-header">{{ article.title }}</h5>
+      </a>
+      <h6 class="card-header" *ngIf="article.tags">
+        <span
+          *ngFor="let tag of article.tags"
+          class="badge text-bg-secondary mx-1"
+          >{{ tag }}</span
+        >
+      </h6>
+      <div class="card-body">
+        <img
+          *ngIf="article.image"
+          src="{{ article.image }}"
+          class="img-fluid"
+          alt="..."
+          style="max-height: 300px"
+        />
+        <p class="card-text">{{ article.text }}</p>
+      </div>
+      <div class="card-footer text-body-secondary">
+        <i
+          class="bi bi-caret-up-square"
+          style="cursor: pointer"
+          (click)="upvoteArticle(article.id)"
+        ></i>
+        <span class="card-text px-2">
+          {{ article.karma }}
+        </span>
+        <i
+          class="bi bi-caret-down-square"
+          style="cursor: pointer"
+          (click)="downvoteArticle(article.id)"
+        ></i>
+      </div>
+    </div>
+  </div>
+</div>

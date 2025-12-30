@@ -1,0 +1,73 @@
+<nav class="navbar sticky-top bg-body-tertiary navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" [routerLink]="''"
+      ><i class="bi bi-boxes mx-1"></i>Klonnit</a
+    >
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="collapse()"
+      *ngIf="isMobileView"
+      [attr.aria-expanded]="isCollapsed"
+      aria-controls="navbarText"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      class="collapse navbar-collapse"
+      id="navbarText"
+      [class.show]="!isCollapsed"
+    >
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="'community/main'"
+            [routerLinkActive]="'active'"
+            >Communities</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            *ngIf="isLoggedOut()"
+            [routerLink]="'login'"
+            [routerLinkActive]="'active'"
+            >Login</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            *ngIf="isLoggedIn()"
+            [routerLink]="'profile'"
+            [routerLinkActive]="'active'"
+            >My profile</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            *ngIf="isLoggedIn()"
+            (click)="logout()"
+            [routerLink]="''"
+            >Log out</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            *ngIf="isLoggedOut()"
+            [routerLink]="'register'"
+            [routerLinkActive]="'active'"
+            >Register</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>

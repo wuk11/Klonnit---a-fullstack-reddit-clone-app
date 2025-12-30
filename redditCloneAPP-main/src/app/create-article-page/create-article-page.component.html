@@ -1,0 +1,50 @@
+<div class="container">
+  <h1 class="text-center">Create Article</h1>
+  <form [formGroup]="articleForm" (submit)="onFormSubmit()">
+    <div class="row">
+      <div class="mb-3 col">
+        <label for="title" class="form-label">Title</label>
+        <input
+          formControlName="title"
+          type="text"
+          class="form-control"
+          id="title"
+        />
+      </div>
+      <div class="mb-3 col">
+        <label for="image" class="form-label">Image Link</label>
+        <input
+          formControlName="image"
+          type="text"
+          class="form-control"
+          id="image"
+          placeholder="URL.."
+        />
+      </div>
+      <div class="mb-3 col">
+        <label for="tags" class="form-label">Tags</label>
+        <input
+          formControlName="tags"
+          type="text"
+          class="form-control"
+          id="tags"
+          placeholder="tag1 tag2 tag3.."
+        />
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="text" class="form-label">Description</label>
+      <textarea
+        formControlName="text"
+        class="form-control"
+        placeholder="Leave a comment here"
+        id="text"
+      ></textarea>
+    </div>
+    <div class="row text-center">
+      <div class="col">
+        <button type="submit" class="btn btn-primary w-50">Post</button>
+      </div>
+    </div>
+  </form>
+</div>

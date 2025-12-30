@@ -1,0 +1,49 @@
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: my-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: myapp_db
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # If you have initial SQL scripts:
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  # Node.js Backend
+  backend:
+    build: ./redditCloneAPI-main
+    container_name: my-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: admin
+      DB_NAME: myapp_db
+      DB_PORT: "3306"
+      SECRET: "qwertasdfg"
+    depends_on:
+      - db
+
+  # Angular Frontend
+  frontend:
+    build: ./redditCloneAPP-main
+    container_name: my-frontend
+    restart: always
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    volumes:
+      - ./redditCloneAPP-main:/app
+      - /app/node_modules
+
+volumes:
+  mysql_data:

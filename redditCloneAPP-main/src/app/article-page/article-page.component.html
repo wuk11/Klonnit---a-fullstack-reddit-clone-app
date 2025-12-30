@@ -1,0 +1,159 @@
+<div class="container mt-5">
+  <div *ngIf="articleData?.article" class="card">
+    <div class="card-header">
+      <h5>
+        <img
+          class="img-fluid border rounded-1 mx-3"
+          style="height: 50px; width: 50px"
+          [src]="
+            userData?.user.image == null
+              ? 'https://placehold.co/50x50/teal/white'
+              : userData?.user.image
+          "
+        />
+        <span style="color: aquamarine">{{ userData?.user.displayName }}</span>
+      </h5>
+    </div>
+    <h5 class="card-header">{{ articleData?.article.title }}</h5>
+    <div class="card-header d-flex align-items-center">
+      <div class="w-100" *ngIf="articleData?.article.tags">
+        <span
+          *ngFor="let tag of articleData?.article.tags"
+          class="badge text-bg-secondary mx-1"
+          >{{ tag }}</span
+        >
+        <button
+          class="btn btn-secondary"
+          type="button"
+          (click)="toggleEditForm()"
+        >
+          Edit tags
+        </button>
+        <form
+          [hidden]="isEditFormHidden"
+          [formGroup]="editTagsForm"
+          (submit)="editTags(articleData?.article.id)"
+        >
+          <input
+            formControlName="tags"
+            type="text"
+            class="form-control"
+            id="tags"
+            placeholder="tag1 tag2 tag3.."
+          />
+          <button class="btn btn-secondary" type="submit">submit</button>
+        </form>
+      </div>
+      <div class="flex-shrink-1">
+        <button
+          class="btn btn-danger"
+          type="button"
+          (click)="deleteArticle(articleData?.article.id)"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+    <div class="card-body text-center">
+      <img
+        *ngIf="articleData?.article.image"
+        src="{{ articleData.article.image }}"
+        class="img-fluid"
+        alt="..."
+        style="max-height: 300px"
+      />
+      <p class="card-text">{{ articleData?.article.text }}</p>
+    </div>
+    <div class="card-footer text-body-secondary d-flex align-items-center">
+      <div class="w-100">
+        <i
+          class="bi bi-caret-up-square"
+          style="cursor: pointer"
+          (click)="upvoteArticle(articleData.article.id)"
+        ></i>
+        <span class="card-text px-2">
+          {{ articleData?.article.karma }}
+        </span>
+        <i
+          class="bi bi-caret-down-square"
+          style="cursor: pointer"
+          (click)="downvoteArticle(articleData.article.id)"
+        ></i>
+      </div>
+
+      <div class="dropdown flex-shrink-1">
+        <button
+          class="btn btn-danger dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+        >
+          Report
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a
+              style="cursor: pointer"
+              class="dropdown-item"
+              (click)="report('Spam', articleData.article.id)"
+              >Spam</a
+            >
+          </li>
+          <li>
+            <a
+              style="cursor: pointer"
+              class="dropdown-item"
+              (click)="report('Offensive', articleData.article.id)"
+              >Offensive</a
+            >
+          </li>
+          <li>
+            <a
+              style="cursor: pointer"
+              class="dropdown-item"
+              (click)="report('Hate', articleData.article.id)"
+              >Hate</a
+            >
+          </li>
+          <li>
+            <a
+              style="cursor: pointer"
+              class="dropdown-item"
+              (click)="report('Harassment', articleData.article.id)"
+              >Harassment</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <form
+    [formGroup]="commentForm"
+    (submit)="postComment(articleData.article.id)"
+    class="my-4"
+  >
+    <textarea
+      formControlName="text"
+      class="form-control"
+      placeholder="Leave a comment here"
+      id="text"
+    ></textarea>
+    <button type="submit" class="btn btn-primary" [disabled]="!isLoggedIn()">
+      comment
+    </button>
+  </form>
+
+  <br />
+  <select
+    (change)="selectSortButton($event)"
+    class="form-select"
+    aria-label="Default select example"
+  >
+    <option selected>Sort by:</option>
+    <option value="karma">Karma</option>
+    <option value="latest">Date latest</option>
+    <option value="oldest">Date oldest</option>
+  </select>
+
+  <app-comment *ngFor="let c of comments" [comment]="c"></app-comment>
+</div>

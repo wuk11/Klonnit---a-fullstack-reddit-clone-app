@@ -1,0 +1,127 @@
+<div class="container mt-5">
+  <div *ngIf="userData" class="card">
+    <h5 class="card-header">
+      username: <span style="color: aquamarine">{{ userData?.username }}</span>
+    </h5>
+    <h5 class="card-header">
+      display name:
+      <span style="color: aquamarine">{{ userData?.displayName }}</span>
+    </h5>
+    <h5 class="card-header">
+      email: <span style="color: aquamarine">{{ userData?.email }}</span>
+    </h5>
+    <div class="card-body text-center">
+      <img
+        *ngIf="userData?.image"
+        src="{{ userData?.image }}"
+        class="img-fluid"
+        alt="..."
+        style="max-height: 100px"
+      />
+      <p class="card-text">
+        description:
+        <span style="color: aquamarine">{{ userData?.description }}</span>
+      </p>
+    </div>
+    <div class="card-footer text-body-secondary">
+      karma:
+      <span class="card-text px-2">
+        {{ karma }}
+      </span>
+    </div>
+  </div>
+
+  <div class="container my-2 py-2 border rounded">
+    <button class="btn btn-primary" (click)="showChangeDisplayNameForm()">
+      Change display name
+    </button>
+    <form
+      *ngIf="isDisplayNameFormVisible"
+      [formGroup]="changeDisplayNameForm"
+      (submit)="onDisplayNameFormSubmit($event)"
+    >
+      <label for="displayName" class="form-label">Display name:</label>
+      <input
+        formControlName="displayName"
+        type="text"
+        class="form-control"
+        id="displayName"
+      />
+      <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+  </div>
+
+  <div class="container my-2 py-2 border rounded">
+    <button class="btn btn-primary" (click)="showChangeImageForm()">
+      Change image
+    </button>
+    <form
+      *ngIf="isImageFormVisible"
+      [formGroup]="changeImageForm"
+      (submit)="onImageFormSubmit($event)"
+    >
+      <label for="image" class="form-label">Image:</label>
+      <input
+        formControlName="image"
+        type="text"
+        class="form-control"
+        id="image"
+      />
+      <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+  </div>
+
+  <div class="container my-2 py-2 border rounded">
+    <button class="btn btn-primary" (click)="showChangePassForm()">
+      Change password
+    </button>
+    <form
+      *ngIf="isFormVisible"
+      [formGroup]="changePassForm"
+      (submit)="onPassFormSubmit($event)"
+    >
+      <label for="password" class="form-label">Current password</label>
+      <input
+        formControlName="password"
+        type="password"
+        class="form-control"
+        id="password"
+      />
+      <label for="newPassword" class="form-label">New password</label>
+      <input
+        formControlName="newPassword"
+        type="password"
+        class="form-control"
+        id="newPassword"
+      />
+      <label for="confirmPassword" class="form-label">Confirm password</label>
+      <input
+        formControlName="confirmPassword"
+        type="password"
+        class="form-control"
+        id="confirmPassword"
+      />
+      <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+  </div>
+
+  <div class="container my-2 py-2 border rounded">
+    <button class="btn btn-primary" (click)="showChangeDescForm()">
+      Change description
+    </button>
+    <form
+      *ngIf="isDescFormVisible"
+      [formGroup]="changeDescForm"
+      (submit)="onDescFormSubmit($event)"
+    >
+      <label for="description" class="form-label">New Description:</label>
+      <textarea
+        formControlName="description"
+        type="text"
+        class="form-control"
+        id="description"
+      ></textarea>
+      <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+  </div>
+</div>

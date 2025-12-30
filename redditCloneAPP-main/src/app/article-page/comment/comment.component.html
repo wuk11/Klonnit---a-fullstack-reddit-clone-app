@@ -1,0 +1,130 @@
+<div class="container">
+  <div class="card mt-2">
+    <div class="card-header">
+      <h5 class="mb-0 d-flex align-items-center">
+        <img
+          class="img-fluid border rounded-1 me-2 flex-shrink-0"
+          style="height: 50px; width: 50px"
+          [src]="
+            userData?.user.image == null
+              ? 'https://placehold.co/50x50/teal/white'
+              : userData?.user.image
+          "
+        />
+        <span class="text-break" style="color: aquamarine">{{ userData?.user.displayName }}</span>
+      </h5>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title text-break">
+        {{ comment.isDeleted ? "Deleted" : comment.text }}
+      </h5>
+    </div>
+    <div class="card-footer text-body-secondary">
+      <!-- Voting and Actions Row -->
+      <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+        <!-- Voting Section -->
+        <div class="d-flex align-items-center">
+          <i
+            class="bi bi-caret-up-square"
+            style="cursor: pointer"
+            (click)="upvoteComment(comment.id)"
+          ></i>
+          <span class="card-text px-2">
+            {{ comment.karma }}
+          </span>
+          <i
+            class="bi bi-caret-down-square"
+            style="cursor: pointer"
+            (click)="downvoteComment(comment.id)"
+          ></i>
+        </div>
+
+        <!-- Action Buttons -->
+        <button
+          class="btn btn-sm btn-outline-secondary"
+          (click)="delete(comment.id)"
+          [disabled]="!isLoggedIn()"
+        >
+          Delete
+        </button>
+        <button
+          (click)="toggleReply(comment.id)"
+          class="btn btn-sm btn-outline-primary"
+          [disabled]="!isLoggedIn()"
+        >
+          Reply
+        </button>
+
+        <!-- Report Dropdown -->
+        <div class="dropdown ms-auto">
+          <button
+            class="btn btn-sm btn-danger dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+          >
+            Report
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a
+                style="cursor: pointer"
+                class="dropdown-item"
+                (click)="report('Spam', comment.id)"
+              >Spam</a>
+            </li>
+            <li>
+              <a
+                style="cursor: pointer"
+                class="dropdown-item"
+                (click)="report('Offensive', comment.id)"
+              >Offensive</a>
+            </li>
+            <li>
+              <a
+                style="cursor: pointer"
+                class="dropdown-item"
+                (click)="report('Hate', comment.id)"
+              >Hate</a>
+            </li>
+            <li>
+              <a
+                style="cursor: pointer"
+                class="dropdown-item"
+                (click)="report('Harassment', comment.id)"
+              >Harassment</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Reply Form -->
+      <form
+        [hidden]="activeReplyId == comment.id ? false : true"
+        [formGroup]="replyForm"
+        (submit)="postReply(comment.id)"
+        class="mt-3"
+      >
+        <textarea
+          formControlName="text"
+          class="form-control mb-2"
+          placeholder="Leave a reply.."
+          id="text"
+          rows="3"
+        ></textarea>
+        <button
+          type="submit"
+          class="btn btn-primary btn-sm w-100 w-sm-auto"
+          [disabled]="!isLoggedIn()"
+        >
+          Comment
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Nested Replies -->
+  <div *ngIf="comment.replies?.length" class="ms-3 ms-md-4">
+    <app-comment *ngFor="let reply of comment.replies" [comment]="reply">
+    </app-comment>
+  </div>
+</div>
