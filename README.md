@@ -43,7 +43,7 @@ git clone https://github.com/wuk11/Klonnit---a-fullstack-reddit-clone-app
 
 2. Run with Docker Compose
 ```bash
-docker-compose up
+docker compose up
 ```
 
 3. Access the application
