@@ -1,5 +1,7 @@
+import os
 from faker import Faker
 import mysql.connector
+import uuid
 from datetime import datetime
 import random
 import json
@@ -7,10 +9,10 @@ import json
 fake = Faker()
 
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="admin",
-    database="reddit_clone"
+    host=os.getenv("DB_HOST", "db"),
+	database=os.getenv("DB_NAME", "myapp_db"),
+	user=os.getenv("DB_USER", "root"),
+	password=os.getenv("DB_PASSWORD", "root")
 )
 
 cursor = db.cursor()
@@ -21,9 +23,9 @@ updatedAt = datetime.now()
 def generateUsers():
     users = []
     for i in range(100000):
-        email = fake.email() + str(i) + fake.safe_hex_color()
-        username = fake.first_name() + str(i) + fake.safe_hex_color()
-        displayName = fake.user_name() + str(i) + fake.safe_hex_color()
+        email = fake.email() + str(i) + "_" + uuid.uuid4().hex[:12]
+        username = fake.first_name() + "_" + uuid.uuid4().hex[:12]
+        displayName = fake.user_name() + "_" + uuid.uuid4().hex[:12]
         password = "test123"
         description = fake.paragraph(nb_sentences=1)
         image = "https://placehold.co/256x256/" + fake.safe_hex_color()[1:] + "/" + fake.safe_hex_color()[1:]
@@ -32,7 +34,7 @@ def generateUsers():
         if len(users) >= 10000:
             cursor.executemany(
                 """
-                INSERT INTO users (email, username, displayName, password, description, image, createdAt, updatedAt)
+                INSERT INTO Users (email, username, displayName, password, description, image, createdAt, updatedAt)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 users
@@ -42,25 +44,20 @@ def generateUsers():
             users.clear()
 
             print(f"Inserted {i + 1} users")
-            usersGenerated += i + 1
 
     if users:
         cursor.executemany(
             """
-            INSERT INTO users (email, username, displayName, password, description, image, createdAt, updatedAt)
+            INSERT INTO Users (email, username, displayName, password, description, image, createdAt, updatedAt)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """,
             users
         )
         db.commit()
 
-    cursor.close()
-    db.close()
-    usersGenerated += len(users)
-
 def generateCommunities():
     communities = []
-    cursor.execute("SELECT id FROM users")
+    cursor.execute("SELECT id FROM Users")
     user_ids = [row[0] for row in cursor.fetchall()]
     for i in range(10000):
         name = fake.company() + " - " + fake.catch_phrase()
@@ -71,7 +68,7 @@ def generateCommunities():
         if len(communities) >= 10000:
             cursor.executemany(
                     """
-                    INSERT INTO communities (name, description, rules, createdAt, updatedAt, UserId)
+                    INSERT INTO Communities (name, description, rules, createdAt, updatedAt, UserId)
                     VALUES (%s, %s, %s, %s, %s, %s)
                     """,
                     communities
@@ -84,7 +81,7 @@ def generateCommunities():
     if communities:
         cursor.executemany(
                 """
-                INSERT INTO communities (name, description, rules, createdAt, updatedAt, UserId)
+                INSERT INTO Communities (name, description, rules, createdAt, updatedAt, UserId)
                 VALUES (%s, %s, %s, %s, %s, %s)
                 """,
                 communities
@@ -95,9 +92,9 @@ def generateCommunities():
 
 def generateArticles():
     articles = []
-    cursor.execute("SELECT id FROM communities")
+    cursor.execute("SELECT id FROM Communities")
     community_ids = [row[0] for row in cursor.fetchall()]
-    cursor.execute("SELECT id FROM users")
+    cursor.execute("SELECT id FROM Users")
     user_ids = [row[0] for row in cursor.fetchall()]
     for i in range(100000):
         title = fake.catch_phrase()
@@ -111,7 +108,7 @@ def generateArticles():
         if len(articles) >= 10000:
             cursor.executemany(
                 """
-                INSERT INTO articles (title, text, karma, image, tags, createdAt, updatedAt, CommunityID, UserID)
+                INSERT INTO Articles (title, text, karma, image, tags, createdAt, updatedAt, CommunityID, UserID)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 articles
@@ -123,7 +120,7 @@ def generateArticles():
     if articles:
             cursor.executemany(
                 """
-                INSERT INTO articles (title, text, karma, image, tags, createdAt, updatedAt, CommunityID, UserID)
+                INSERT INTO Articles (title, text, karma, image, tags, createdAt, updatedAt, CommunityID, UserID)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 articles
@@ -134,9 +131,9 @@ def generateArticles():
 
 def generateComments():
     comments = []
-    cursor.execute("SELECT id FROM articles")
+    cursor.execute("SELECT id FROM Articles")
     article_ids = [row[0] for row in cursor.fetchall()]
-    cursor.execute("SELECT id FROM users")
+    cursor.execute("SELECT id FROM Users")
     user_ids = [row[0] for row in cursor.fetchall()]
     for i in range(150000):
         text = fake.paragraph(nb_sentences=1)
@@ -148,7 +145,7 @@ def generateComments():
         if len(comments) >= 10000:
             cursor.executemany(
                 """
-                INSERT INTO comments (text, karma, createdAt, updatedAt, ArticleId, UserId, replyToCommentId)
+                INSERT INTO Comments (text, karma, createdAt, updatedAt, ArticleId, UserId, replyToCommentId)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """,
                 comments
@@ -160,7 +157,7 @@ def generateComments():
     if comments:
         cursor.executemany(
             """
-            INSERT INTO comments (text, karma, createdAt, updatedAt, ArticleId, UserId, replyToCommentId)
+            INSERT INTO Comments (text, karma, createdAt, updatedAt, ArticleId, UserId, replyToCommentId)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             """,
             comments
@@ -171,12 +168,12 @@ def generateComments():
 def generateReplies():
     comments = []
 
-    cursor.execute("SELECT id, ArticleId FROM comments")
+    cursor.execute("SELECT id, ArticleId FROM Comments")
     comments_data = cursor.fetchall()
 
-    cursor.execute("SELECT id FROM users")
+    cursor.execute("SELECT id FROM Users")
     user_ids = [row[0] for row in cursor.fetchall()]
-    for i in range(500000):
+    for i in range(300000):
         text = fake.paragraph(nb_sentences=1)
         karma = 0
         UserId = random.choice(user_ids)
@@ -185,7 +182,7 @@ def generateReplies():
         if len(comments) >= 10000:
             cursor.executemany(
                 """
-                INSERT INTO comments (text, karma, createdAt, updatedAt, ArticleId, UserId, replyToCommentId)
+                INSERT INTO Comments (text, karma, createdAt, updatedAt, ArticleId, UserId, replyToCommentId)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """,
                 comments
@@ -197,7 +194,7 @@ def generateReplies():
     if comments:
         cursor.executemany(
             """
-            INSERT INTO comments (text, karma, createdAt, updatedAt, ArticleId, UserId, replyToCommentId)
+            INSERT INTO Comments (text, karma, createdAt, updatedAt, ArticleId, UserId, replyToCommentId)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             """,
             comments
@@ -210,3 +207,5 @@ generateCommunities()
 generateArticles()
 generateComments()
 generateReplies()
+cursor.close()
+db.close()

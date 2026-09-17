@@ -14,6 +14,11 @@ services:
       - mysql_data:/var/lib/mysql
       # If you have initial SQL scripts:
       # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   # Node.js Backend
   backend:
@@ -45,5 +50,18 @@ services:
       - ./redditCloneAPP-main:/app
       - /app/node_modules
 
+  python:
+    build: ./python
+    container_name: reddit-python
+    depends_on:
+      backend:
+        condition: service_started
+    environment:
+      DB_HOST: db
+      DB_NAME: myapp_db
+      DB_USER: root
+      DB_PASSWORD: admin
+    volumes:
+      - ./python:/app
 volumes:
   mysql_data:
