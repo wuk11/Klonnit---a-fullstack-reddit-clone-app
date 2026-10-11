@@ -10,7 +10,10 @@ import { Router } from '@angular/router';
   styleUrl: './front-page-random.component.css',
 })
 export class FrontPageRandomComponent {
-  constructor(private backend: BackendService, private router: Router) {}
+  constructor(
+    private backend: BackendService,
+    private router: Router,
+  ) {}
 
   data: [] = [];
   articles: any = [];
@@ -19,15 +22,17 @@ export class FrontPageRandomComponent {
     this.backend.getRandomArticles().subscribe((res: any) => {
       this.data = res.articles;
       this.articles = this.data;
-      console.log(this.articles)
-      console.log('init func console log')
+      console.log(this.articles);
+      /* 
       if (this.data.length > 10) {
         this.shuffle(this.data);
         this.articles = this.data.slice(0, 10);
       }
+      */
     });
   }
 
+  /*
   shuffle(array: []) {
     let index = this.data.length;
     while (index != 0) {
@@ -37,6 +42,7 @@ export class FrontPageRandomComponent {
       [array[index], array[randomIndex]] = [array[randomIndex], array[index]];
     }
   }
+  */
 
   goToCommunity(id: string) {
     this.router.navigate(['community/' + id]);

@@ -5,6 +5,7 @@ const communityRoles = require("../models/communityRoles");
 const Ban_List = require("../models/ban_list");
 
 const { validationResult } = require("express-validator");
+const sequelize = require("../sequelize");
 
 exports.postCommunity = async (req, res, next) => {
   const { name, description } = req.body;
@@ -131,7 +132,7 @@ exports.postUnBan = async (req, res, next) => {
       });
       if (!ban) {
         throw new Error(
-          "No ban data found for this user. // user is not banned?"
+          "No ban data found for this user. // user is not banned?",
         );
       }
       ban.destroy();
@@ -243,10 +244,13 @@ exports.getArticles = async (req, res, next) => {
 
 exports.getRandomArticles = async (req, res, next) => {
   try {
-    const articles = await Article.findAll();
+    const articles = await Article.findAll({
+      order: sequelize.literal("RAND()"),
+      limit: 10,
+    });
     res.json({ articles: articles });
   } catch (err) {
-    res.status(401).json({
+    res.status(500).json({
       error: "Error - cannot fetch the random articles.",
       message: err.message,
     });
