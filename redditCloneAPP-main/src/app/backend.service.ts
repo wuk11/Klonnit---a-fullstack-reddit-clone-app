@@ -7,8 +7,8 @@ import { Injectable } from '@angular/core';
 export class BackendService {
   constructor(private http: HttpClient) {}
 
-  getCommunities() {
-    return this.http.get('http://localhost:3000/community/');
+  getCommunities(offset: string) {
+    return this.http.get('http://localhost:3000/community/' + offset);
   }
 
   deleteCommunity(id: string) {
@@ -40,7 +40,7 @@ export class BackendService {
     title: string,
     text: string,
     image?: string,
-    tags?: JSON
+    tags?: JSON,
   ) {
     return this.http.post(
       'http://localhost:3000/community/' + id + '/article',
@@ -49,7 +49,7 @@ export class BackendService {
         text,
         ...(image ? { image } : {}),
         ...(tags ? { tags } : {}),
-      }
+      },
     );
   }
 
@@ -74,7 +74,12 @@ export class BackendService {
     });
   }
 
-  postRegister(username: string, password: string, confirmPassword: string, email: string) {
+  postRegister(
+    username: string,
+    password: string,
+    confirmPassword: string,
+    email: string,
+  ) {
     return this.http.post('http://localhost:3000/auth/signup', {
       username,
       password,
@@ -98,14 +103,14 @@ export class BackendService {
   upvoteArticle(id: string) {
     return this.http.post(
       'http://localhost:3000/community/article/' + id + '/upvote',
-      {}
+      {},
     );
   }
 
   downvoteArticle(id: string) {
     return this.http.post(
       'http://localhost:3000/community/article/' + id + '/downvote',
-      {}
+      {},
     );
   }
 
@@ -170,7 +175,7 @@ export class BackendService {
       'http://localhost:3000/community/changeRules/' + id,
       {
         rules: rules,
-      }
+      },
     );
   }
 
@@ -183,7 +188,7 @@ export class BackendService {
       'http://localhost:3000/community/articles/editTags/' + id,
       {
         tags: tags,
-      }
+      },
     );
   }
 }

@@ -22,7 +22,7 @@ router.post(
       .isLength({ max: 200 })
       .withMessage("Community description can be at most 200 characters long."),
   ],
-  communityController.postCommunity
+  communityController.postCommunity,
 );
 
 router.patch(
@@ -35,14 +35,14 @@ router.patch(
       .isLength({ max: 200 })
       .withMessage("Community rules can be at most 200 characters long."),
   ],
-  communityController.changeRules
+  communityController.changeRules,
 );
 
 router.post("/ban/:id", authMiddleware, communityController.postBan);
 
 router.post("/unBan/:id", authMiddleware, communityController.postUnBan);
 
-router.get("/", communityController.getCommunities);
+router.get("/:offset", communityController.getCommunities);
 
 router.get("/canDelete/:id", authMiddleware, communityController.canDelete);
 
@@ -92,7 +92,7 @@ router.post(
       .notEmpty()
       .withMessage("Tag cannot be empty or just spaces."),
   ],
-  communityController.postArticle
+  communityController.postArticle,
 );
 
 router.patch(
@@ -112,19 +112,19 @@ router.patch(
       .withMessage("Tag cannot be empty or just spaces."),
   ],
   authMiddleware,
-  communityController.postEditTags
+  communityController.postEditTags,
 );
 
 router.post(
   "/article/:id/upvote",
   authMiddleware,
-  communityController.postArticleUpvote
+  communityController.postArticleUpvote,
 );
 
 router.post(
   "/article/:id/downvote",
   authMiddleware,
-  communityController.postArticleDownvote
+  communityController.postArticleDownvote,
 );
 
 router.get("/:id/articles", communityController.getArticles);
@@ -136,7 +136,7 @@ router.get("/randomArticles/", communityController.getRandomArticles);
 router.delete(
   "/article/:id",
   authMiddleware,
-  communityController.deleteArticle
+  communityController.deleteArticle,
 );
 
 module.exports = router;

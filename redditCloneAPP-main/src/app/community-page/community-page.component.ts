@@ -15,7 +15,7 @@ export class CommunityPageComponent {
   constructor(
     private backend: BackendService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) {
     this.editRulesForm = this.fb.group({
       rules: [''],
@@ -40,10 +40,10 @@ export class CommunityPageComponent {
       this.data = res;
     });
 
-    this.backend.getCommunities().subscribe((res) => {
+    this.backend.getCommunities("").subscribe((res) => {
       this.communityData = res;
       this.community = this.communityData.communities.find(
-        (c: any) => c.id == this.communityId
+        (c: any) => c.id == this.communityId,
       );
       this.communityName = this.community ? this.community.name : 'Unknown';
     });
@@ -82,7 +82,7 @@ export class CommunityPageComponent {
     switch (sort) {
       case 'hot':
         this.data.articles.sort(
-          (a: any, b: any) => this.hotnessScore(b) - this.hotnessScore(a)
+          (a: any, b: any) => this.hotnessScore(b) - this.hotnessScore(a),
         );
         break;
       case 'karma':
@@ -91,13 +91,13 @@ export class CommunityPageComponent {
       case 'oldest':
         this.data.articles.sort(
           (a: any, b: any) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         );
         break;
       case 'latest':
         this.data.articles.sort(
           (a: any, b: any) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
         break;
     }

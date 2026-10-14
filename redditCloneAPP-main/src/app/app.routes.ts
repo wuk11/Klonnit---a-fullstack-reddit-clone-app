@@ -42,18 +42,16 @@ export const routes: Routes = [
   {
     path: 'createCommunity',
     loadComponent: async () => {
-      const m = await import(
-        './create-community-page/create-community-page.component'
-      );
+      const m =
+        await import('./create-community-page/create-community-page.component');
       return m.CreateCommunityPageComponent;
     },
   },
   {
     path: 'community/:communityId/createArticle',
     loadComponent: async () => {
-      const m = await import(
-        './create-article-page/create-article-page.component'
-      );
+      const m =
+        await import('./create-article-page/create-article-page.component');
       return m.CreateArticlePageComponent;
     },
   },

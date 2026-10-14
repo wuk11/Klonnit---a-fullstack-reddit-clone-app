@@ -150,13 +150,19 @@ exports.postUnBan = async (req, res, next) => {
 
 exports.getCommunities = async (req, res, next) => {
   try {
-    const communities = await Community.findAll();
+    const offset = parseInt(req.params.offset);
+
+    const communities = await Community.findAll({
+      limit: 50,
+      offset: offset,
+    });
+
     if (!communities) {
       throw new Error("Server error - no communities found");
     }
     res.json({ communities: communities });
   } catch (err) {
-    res.status(401).json({
+    res.status(500).json({
       error: "Error - cannot fetch communities.",
       message: err.message,
     });

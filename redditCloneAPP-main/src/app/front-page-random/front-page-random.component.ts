@@ -22,27 +22,8 @@ export class FrontPageRandomComponent {
     this.backend.getRandomArticles().subscribe((res: any) => {
       this.data = res.articles;
       this.articles = this.data;
-      console.log(this.articles);
-      /* 
-      if (this.data.length > 10) {
-        this.shuffle(this.data);
-        this.articles = this.data.slice(0, 10);
-      }
-      */
     });
   }
-
-  /*
-  shuffle(array: []) {
-    let index = this.data.length;
-    while (index != 0) {
-      let randomIndex = Math.floor(Math.random() * index);
-      index--;
-
-      [array[index], array[randomIndex]] = [array[randomIndex], array[index]];
-    }
-  }
-  */
 
   goToCommunity(id: string) {
     this.router.navigate(['community/' + id]);
