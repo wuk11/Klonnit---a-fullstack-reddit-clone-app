@@ -6,6 +6,8 @@ const authMiddleware = require("../middleware/auth.js");
 const router = express.Router();
 const { body } = require("express-validator");
 
+router.get("/randomArticles/", communityController.getRandomArticles);
+
 //community routes ~~~
 router.post(
   "/",
@@ -130,8 +132,6 @@ router.post(
 router.get("/:id/articles", communityController.getArticles);
 
 router.get("/articles/:id", communityController.getArticle);
-
-router.get("/randomArticles/", communityController.getRandomArticles);
 
 router.delete(
   "/article/:id",

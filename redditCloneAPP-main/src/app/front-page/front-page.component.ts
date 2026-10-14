@@ -42,7 +42,6 @@ export class FrontPageComponent {
   }
 
   ngOnInit() {
-    console.log(this.data);
     this.getArticles();
   }
 
