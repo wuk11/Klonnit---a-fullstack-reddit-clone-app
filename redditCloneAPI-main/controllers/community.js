@@ -266,10 +266,22 @@ exports.getArticles = async (req, res, next) => {
 
 exports.getRandomArticles = async (req, res, next) => {
   try {
-    const articles = await Article.findAll({
-      order: sequelize.literal("RAND()"),
-      limit: 10,
-    });
+    const [articles] = await sequelize.query(`
+        SELECT *
+        FROM Articles
+        WHERE id >= (
+            SELECT FLOOR(
+                min_id + RAND() * (max_id - min_id)
+            )
+            FROM (
+                SELECT MIN(id) AS min_id,
+                      MAX(id) AS max_id
+                FROM Articles
+            ) AS bounds
+        )
+        ORDER BY id
+        LIMIT 10;
+    `);
     res.json({ articles: articles });
   } catch (err) {
     res.status(500).json({
