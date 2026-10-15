@@ -8,7 +8,11 @@ export class BackendService {
   constructor(private http: HttpClient) {}
 
   getCommunities(offset: string) {
-    return this.http.get('http://localhost:3000/community/' + offset);
+    return this.http.get('http://localhost:3000/community/frontpage/' + offset);
+  }
+
+  getCommunity(id: string) {
+    return this.http.get('http://localhost:3000/community/' + id);
   }
 
   deleteCommunity(id: string) {

@@ -158,12 +158,28 @@ exports.getCommunities = async (req, res, next) => {
     });
 
     if (!communities) {
-      throw new Error("Server error - no communities found");
+      throw new Error("Server error - no communities found.");
     }
     res.json({ communities: communities });
   } catch (err) {
     res.status(500).json({
       error: "Error - cannot fetch communities.",
+      message: err.message,
+    });
+  }
+};
+
+exports.getCommunity = async (req, res, next) => {
+  try {
+    const community = await Community.findByPk(req.params.id);
+
+    if (!community) {
+      throw new Error("Server error - no community found.");
+    }
+    res.json({ community: community });
+  } catch (err) {
+    res.status(500).json({
+      error: "Error - cannot fetch community.",
       message: err.message,
     });
   }

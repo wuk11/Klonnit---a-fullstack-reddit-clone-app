@@ -40,12 +40,8 @@ export class CommunityPageComponent {
       this.data = res;
     });
 
-    this.backend.getCommunities("").subscribe((res) => {
-      this.communityData = res;
-      this.community = this.communityData.communities.find(
-        (c: any) => c.id == this.communityId,
-      );
-      this.communityName = this.community ? this.community.name : 'Unknown';
+    this.backend.getCommunity(this.communityId).subscribe((res: any) => {
+      this.community = { ...res.community };
     });
 
     this.canDelete(this.communityId);

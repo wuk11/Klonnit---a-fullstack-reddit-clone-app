@@ -44,7 +44,9 @@ router.post("/ban/:id", authMiddleware, communityController.postBan);
 
 router.post("/unBan/:id", authMiddleware, communityController.postUnBan);
 
-router.get("/:offset", communityController.getCommunities);
+router.get("/frontpage/:offset", communityController.getCommunities);
+
+router.get("/:id", communityController.getCommunity);
 
 router.get("/canDelete/:id", authMiddleware, communityController.canDelete);
 
