@@ -30,7 +30,9 @@ exports.postLogin = async (req, res, next) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ where: { username: username } });
+    const user = await User.scope("withPassword").findOne({
+      where: { username: username },
+    });
     if (!user) {
       throw new Error("No user found!");
     }
@@ -40,7 +42,7 @@ exports.postLogin = async (req, res, next) => {
       throw new Error("Wrong username or password!");
     }
 
-    const token = jwt.sign({ user: user }, process.env.SECRET, {
+    const token = jwt.sign({ user: { id: user.id } }, process.env.SECRET, {
       expiresIn: "1h",
     });
 

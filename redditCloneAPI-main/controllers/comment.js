@@ -124,7 +124,7 @@ exports.deleteComment = async (req, res, next) => {
     if (comment.UserId !== req.user.id) {
       throw new Error("Not authorized.");
     }
-    comment.update({ isDeleted: true });
+    await comment.update({ isDeleted: true });
     res.json({ message: "comment deleted." });
   } catch (err) {
     res

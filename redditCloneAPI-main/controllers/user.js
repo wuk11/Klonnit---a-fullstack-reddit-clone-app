@@ -17,12 +17,15 @@ exports.postChangePassword = async (req, res, next) => {
       throw new Error(validationErrors.array()[0].msg);
     }
 
-    const isHashedPw = await bcrypt.compare(oldPass, req.user.password);
+    const user = await User.scope("withPassword").findByPk(req.user.id);
+    if (!user) {
+      throw new Error("No user found.");
+    }
+    const isHashedPw = await bcrypt.compare(oldPass || "", user.password);
     if (!isHashedPw) {
       throw new Error("Current password doesnt match");
     } else {
       const newHashedPass = await bcrypt.hash(newPass, 10);
-      const user = await User.findByPk(req.user.id);
       await user.update({ password: newHashedPass });
       res.json({ message: "Password changed." });
     }
@@ -35,7 +38,7 @@ exports.postChangePassword = async (req, res, next) => {
 
 exports.postChangeUsername = async (req, res, next) => {
   try {
-    const newUsername = req.body.newUsername;
+    const newUsername = req.body.username;
 
     const validationErrors = validationResult(req);
     if (!validationErrors.isEmpty()) {

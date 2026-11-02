@@ -38,6 +38,14 @@ const User = sequelize.define(
   },
   {
     timestamps: true,
+    defaultScope: {
+      attributes: { exclude: ["password"] },
+    },
+    scopes: {
+      withPassword: {
+        attributes: { include: ["password"] },
+      },
+    },
     hooks: {
       beforeCreate: (user) => {
         if (!user.displayName) {

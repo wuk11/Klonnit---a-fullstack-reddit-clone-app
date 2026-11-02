@@ -135,7 +135,7 @@ exports.postUnBan = async (req, res, next) => {
           "No ban data found for this user. // user is not banned?",
         );
       }
-      ban.destroy();
+      await ban.destroy();
     } else {
       throw new Error("Not authorised.");
     }
@@ -198,7 +198,7 @@ exports.deleteCommunity = async (req, res, next) => {
         throw new Error("Not authorized.");
       }
     }
-    community.destroy();
+    await community.destroy();
     res.json({ message: "Community deleted." });
   } catch (err) {
     res.status(401).json({
@@ -316,8 +316,8 @@ exports.deleteArticle = async (req, res, next) => {
       req.user.id == article.UserId ||
       hasRole.length > 0
     ) {
-      article.destroy();
-      res.json({ message: "Article deleted." });
+      await article.destroy();
+      return res.json({ message: "Article deleted." });
     }
     throw new Error("Not authorized");
   } catch (err) {
